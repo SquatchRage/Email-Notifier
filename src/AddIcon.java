@@ -63,7 +63,7 @@ public class AddIcon implements ActionListener {
 		
 		if(cmd.equals("LOGIN SCREEN"))
 			try {
-				new LoginFrame();
+				new SettingsDialog();
 			} catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

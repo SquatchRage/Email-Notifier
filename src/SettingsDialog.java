@@ -27,7 +27,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.undo.UndoManager;
 
-public class LoginFrame extends JFrame implements ActionListener 
+public class SettingsDialog extends JDialog implements ActionListener 
 {
 
 	private static final long serialVersionUID = 8417262671424751407L;
@@ -60,7 +60,7 @@ public class LoginFrame extends JFrame implements ActionListener
 	Container cp;
 
  
-public LoginFrame() throws FileNotFoundException{
+public SettingsDialog() throws FileNotFoundException{
 	
 	Props.propsExist();
 	 //creation of buttons, labels, textfields, lists and panels. 
@@ -162,7 +162,6 @@ public LoginFrame() throws FileNotFoundException{
 	 cp.add(buttonPanel, BorderLayout.SOUTH);
 	 
 
-	 setUp();
  }
  
  @Override
@@ -209,27 +208,6 @@ public LoginFrame() throws FileNotFoundException{
 	 }
 	 
  }
- 
-	
-
 
  
- void setUp ()
- {
-     Toolkit tk;
-     Dimension d;
-     
-     setDefaultCloseOperation (EXIT_ON_CLOSE);
-     
-     tk = Toolkit.getDefaultToolkit ();
-     d = tk.getScreenSize ();
-     
-     setSize (d.width/4, d.height/4);
-     setLocation (d.width/3, d.height/3);
-     setTitle ("Login");
-     setVisible (true);
- 	}
- 
- 
-
 }

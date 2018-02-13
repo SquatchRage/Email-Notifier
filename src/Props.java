@@ -41,9 +41,9 @@ public static void getProps() throws FileNotFoundException{
 			e.printStackTrace();
 		}
 		
-		 LoginFrame.storeServerName = prop.getProperty("Host");
-		 LoginFrame.storeUserName = prop.getProperty("User");
-		 LoginFrame.storePassword = prop.getProperty("Password");
+	SettingsDialog.storeServerName = prop.getProperty("Host");
+	SettingsDialog.storeUserName = prop.getProperty("User");
+	SettingsDialog.storePassword = prop.getProperty("Password");
 }
 
 
