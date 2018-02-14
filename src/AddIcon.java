@@ -45,9 +45,17 @@ public class AddIcon implements ActionListener {
 				System.out.println("TrayIcon could not be added");
 			}
 		}
-		
-		timer = new Timer(SettingsDialog.storeTime, this);
-		timer.setActionCommand("NEW MAIL");
+		try {
+			Props.getProps();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int k = Integer.parseInt(Props.time);
+		k *= 1000;
+		System.out.println(k + " I am the variable k \n\n");
+		timer = new Timer(k, this);
+		timer.setActionCommand("CHECK MAIL");
 		timer.setRepeats(true);
 		timer.start();
 	}
@@ -58,8 +66,14 @@ public class AddIcon implements ActionListener {
 		
 		cmd = e.getActionCommand();
 		
-		if(cmd.equals("NEW MAIL")){
-			 checkingMail.check(SettingsDialog.storeServerName, SettingsDialog.protocolProvider, SettingsDialog.storeUserName, SettingsDialog.storePassword);
+		if(cmd.equals("CHECK MAIL")){
+			try {
+				Props.getProps();
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			 checkingMail.check(Props.server, SettingsDialog.protocolProvider, Props.user, Props.pass);
 		
 			if(checkingMail.newMessageCount >= 1)
 		

@@ -49,7 +49,6 @@ public class SettingsDialog extends JDialog implements ActionListener
 	static String storePassword;
 	static String storeUserName;
 	static String storeServerName;
-	String setPassword, setUserName, setServerName;
 	static String getTime;
 	static int storeTime;
 	JCheckBox storeSound;
@@ -65,7 +64,8 @@ public class SettingsDialog extends JDialog implements ActionListener
  
 public SettingsDialog() throws FileNotFoundException{
 	// This line code checks whether there is already a properties file, if there is, it does not display one, if it there isnt, it display dialog. 
-	  Props.propsExist();
+	  //Props.propsExist();
+	
 	  
 	  
 	 //creation of buttons, labels, textfields, lists and panels. 
@@ -94,6 +94,7 @@ public SettingsDialog() throws FileNotFoundException{
      passwordField.setText(storePassword);
      
      timeField = new JTextField(5);
+     timeField.setInputVerifier(new Verification());
      
      storeSound = new JCheckBox();
 
@@ -176,13 +177,24 @@ public SettingsDialog() throws FileNotFoundException{
  @Override
  public void actionPerformed(ActionEvent AE) 
  {     
+	 
+	 Verification verify = new Verification();
+
+	 
 	 if(AE.getActionCommand().equals("Login")){
+		 
 		 
 	     storePassword = passwordField.getText().trim();
 	     storeUserName = nameField.getText().trim();
 		 storeServerName = serverField.getText().trim();
-		 getTime = timeField.getText();
-		//storeTime = Integer.parseInt(getTime); 
+		 getTime = timeField.getText().trim();
+		 storeTime = Integer.parseInt(getTime); 
+			 
+		 if (verify.verify(timeField)){
+             JOptionPane.showMessageDialog(null, "True Value");
+         }
+         else JOptionPane.showMessageDialog(null, "False Value");
+     
 		
 	
 		 //store properties here

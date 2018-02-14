@@ -10,7 +10,10 @@ import java.util.Properties;
 
 public class Props {
 	
-	String getServer,  getUser,  getPass;
+	static String server; 
+	static String user; 
+	static String pass;
+	static String time;
 
 	
 	public void setProps(String server, String user, String pass, String time) throws IOException{
@@ -43,10 +46,11 @@ public static void getProps() throws FileNotFoundException{
 			e.printStackTrace();
 		}
 		
-	SettingsDialog.storeServerName = prop.getProperty("Host");
-	SettingsDialog.storeUserName = prop.getProperty("User");
-	SettingsDialog.storePassword = prop.getProperty("Password");
-	SettingsDialog.getTime= prop.getProperty("checkTime");
+	server = prop.getProperty("Host");
+	user = prop.getProperty("User");
+	pass = prop.getProperty("Password");
+	time = prop.getProperty("checkTime");
+	
 }
 
 
