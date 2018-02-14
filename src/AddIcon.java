@@ -23,9 +23,9 @@ public class AddIcon implements ActionListener {
 		menuItem.addActionListener(this);
 		popupMenu.add(menuItem);
 		
-		menuItem = new MenuItem("Login Sceen");
+		menuItem = new MenuItem("Settings");
 		menuItem.addActionListener(this);
-		menuItem.setActionCommand("LOGIN SCREEN");
+		menuItem.setActionCommand("SETTINGS");
 		popupMenu.add(menuItem);
 		
 		menuItem = new MenuItem("Sound Toggle");
@@ -46,9 +46,9 @@ public class AddIcon implements ActionListener {
 			}
 		}
 		
-		timer = new Timer(4000, this);
-		timer.setActionCommand("UPDATE");
-		timer.setRepeats(false);
+		timer = new Timer(SettingsDialog.storeTime, this);
+		timer.setActionCommand("NEW MAIL");
+		timer.setRepeats(true);
 		timer.start();
 	}
 
@@ -58,10 +58,14 @@ public class AddIcon implements ActionListener {
 		
 		cmd = e.getActionCommand();
 		
-		if(cmd.equals("UPDATE"))
-			JOptionPane.showMessageDialog(null, "The timer just went off!"); // THIS NEEDS TO COORELATE TO NEW MAIL!
+		if(cmd.equals("NEW MAIL")){
+			 checkingMail.check(SettingsDialog.storeServerName, SettingsDialog.protocolProvider, SettingsDialog.storeUserName, SettingsDialog.storePassword);
 		
-		if(cmd.equals("LOGIN SCREEN"))
+			if(checkingMail.newMessageCount >= 1)
+		
+			JOptionPane.showMessageDialog(null, "New Mail!"); 
+		}
+		if(cmd.equals("SETTINGS"))
 			try {
 				new SettingsDialog();
 			} catch (FileNotFoundException e1) {

@@ -13,7 +13,7 @@ public class Props {
 	String getServer,  getUser,  getPass;
 
 	
-	public void setProps(String server, String user, String pass) throws IOException{
+	public void setProps(String server, String user, String pass, String time) throws IOException{
 		
 		Properties prop = new Properties();
 		OutputStream os = new FileOutputStream("config.properties");
@@ -21,6 +21,8 @@ public class Props {
 		prop.setProperty("Host", server);
 		prop.setProperty("User", user);
 		prop.setProperty("Password", pass);
+		prop.setProperty("checkTime", time);
+
 
 		prop.store(os, null);
 		
@@ -44,6 +46,7 @@ public static void getProps() throws FileNotFoundException{
 	SettingsDialog.storeServerName = prop.getProperty("Host");
 	SettingsDialog.storeUserName = prop.getProperty("User");
 	SettingsDialog.storePassword = prop.getProperty("Password");
+	SettingsDialog.getTime= prop.getProperty("checkTime");
 }
 
 
@@ -54,10 +57,14 @@ public static void getProps() throws FileNotFoundException{
 		
 		File propertiesFile = new File("config.properties");
 		if(propertiesFile.exists()){
-			  System.out.println("File existed");
-			  getProps();
-		  }else{
+			
+			new AddIcon();
+
+		}else{
 			  System.out.println("File not found!");
+			  new SettingsDialog();
+			  getProps();
+
 		  }
 
 	  }

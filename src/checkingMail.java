@@ -79,41 +79,5 @@ public class checkingMail {
 	System.out.println("===============================================================================\n");
 	}
 	
-/*	static void processMessage(Message me){
-		
-		String[] headerList;
-		
-		try{
-			
-			System.out.println("From: "+me.getFrom()[0] + "\n\n");
-			
-			headerList = me.getHeader("to");
-			if(headerList != null)
-				System.out.println("To: " + headerList[0] + "\n \n");
-			
-			headerList = me.getHeader("date");
-			if(headerList != null)
-				System.out.println("Date Header: " + headerList[0] + "\n \n");
-			
-			System.out.println("Recieved Date is: " + me.getReceivedDate()+ "\n");
-			System.out.println("Subject is: " + me.getSubject() + "\n");
-			
-			System.out.println("=======================================================================================");
-		}
-		catch (MessagingException m){
-			System.out.println("MessagingExceptionFound.  Bad Messages?");
-		}
-	}
-		
-		
-	static void showAllHeaders(IMAPMessage msg)throws MessagingException{
-		
-		Enumeration<String>  headerList;
-		
-		headerList = msg.getAllHeaderLines();
-		
-		while(headerList.hasMoreElements())
-			System.out.println(">> " + headerList.nextElement());
-	}
-*/
+
 }

@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.sql.Time;
 import java.util.Properties;
 import java.awt.*;
 import javax.swing.*;
@@ -42,31 +43,36 @@ public class SettingsDialog extends JDialog implements ActionListener
 	JTextField serverField;
 	JTextField timeField;
  
-	JButton loginButton;
+	JButton saveButton;
 	JButton cancelButton;
 	
 	static String storePassword;
 	static String storeUserName;
 	static String storeServerName;
 	String setPassword, setUserName, setServerName;
-	int storeTime;
+	static String getTime;
+	static int storeTime;
 	JCheckBox storeSound;
 	JPanel labelPanel;
 	JPanel fieldPanel;
 	JPanel buttonPanel;
 	JPanel togglePanel;
 	Props p = new Props();
-	String protocolProvider = "imaps";
+	static String protocolProvider = "imaps";
+	Timer timer;
 	Container cp;
 
  
 public SettingsDialog() throws FileNotFoundException{
-	
-	Props.propsExist();
+	// This line code checks whether there is already a properties file, if there is, it does not display one, if it there isnt, it display dialog. 
+	  Props.propsExist();
+	  
+	  
 	 //creation of buttons, labels, textfields, lists and panels. 
-	 loginButton = new JButton("Login");
-	 loginButton.addActionListener(this);
-	 loginButton.setActionCommand("Login");
+	  saveButton = new JButton("Login");
+	  saveButton.addActionListener(this);
+	  saveButton.setActionCommand("Login");
+	  saveButton.isDefaultButton();
 	 
 	 cancelButton = new JButton("Cancel");
 	 cancelButton.addActionListener(this);
@@ -154,13 +160,16 @@ public SettingsDialog() throws FileNotFoundException{
 		gbc.weightx = 1;
 		fieldPanel.add(storeSound, gbc);
 
-		buttonPanel.add(loginButton);
+		buttonPanel.add(saveButton);
 		buttonPanel.add(cancelButton);
 		
 	 cp = getContentPane();
 	 cp.add(fieldPanel, BorderLayout.WEST);
 	 cp.add(buttonPanel, BorderLayout.SOUTH);
 	 
+
+		setSize(500, 300);
+		setVisible(true);
 
  }
  
@@ -172,33 +181,33 @@ public SettingsDialog() throws FileNotFoundException{
 	     storePassword = passwordField.getText().trim();
 	     storeUserName = nameField.getText().trim();
 		 storeServerName = serverField.getText().trim();
-		//storeTime = Integer.parseInt(timeField.getText());
-
+		 getTime = timeField.getText();
+		//storeTime = Integer.parseInt(getTime); 
+		
+	
 		 //store properties here
 		 
 			try {
-				p.setProps(storeServerName, storeUserName, storePassword);
+				p.setProps(storeServerName, storeUserName, storePassword, getTime);
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			 checkingMail.check(storeServerName, protocolProvider, storeUserName, storePassword);
 			 JOptionPane.showMessageDialog(null, "You Have " +  checkingMail.newMessageCount + " New Messages! ");
 			 new AddIcon();
-			 Timer timer = new Timer(1000, new ActionListener() { // 10 sec
+//------------------------------------------------------------------------------------------------------------------------------------			 
+			 // This code hides the settings dialog 1 second after all mail has been read and user clicks on optionPane
+			 Timer timer = new Timer(1000, new ActionListener() { 
 		            public void actionPerformed(ActionEvent e) {
 		                setVisible(false);
 		                dispose();
 		            }
 		        });
-
 		        timer.start();
-
 		        setVisible(true);
-			 
+//------------------------------------------------------------------------------------------------------------------------------------			 
 	 
 	 }
 	 
@@ -207,7 +216,6 @@ public SettingsDialog() throws FileNotFoundException{
 		 System.exit(0);
 	 }
 	 
- }
-
- 
-}
+	 
+ 	}
+}// EOC
