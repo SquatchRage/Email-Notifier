@@ -67,7 +67,7 @@ public static void getProps() throws FileNotFoundException{
 		}else{
 			  System.out.println("File not found!");
 			  new SettingsDialog();
-			  getProps();
+			 // getProps();
 
 		  }
 

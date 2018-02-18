@@ -94,7 +94,8 @@ public SettingsDialog() throws FileNotFoundException{
      passwordField.setText(storePassword);
      
      timeField = new JTextField(5);
-     timeField.setInputVerifier(new Verification());
+     timeField.setName("timeField");
+     timeField.setInputVerifier(new ValidationCheck());
      
      storeSound = new JCheckBox();
 
@@ -178,9 +179,6 @@ public SettingsDialog() throws FileNotFoundException{
  public void actionPerformed(ActionEvent AE) 
  {     
 	 
-	 Verification verify = new Verification();
-
-	 
 	 if(AE.getActionCommand().equals("Login")){
 		 
 		 
@@ -189,14 +187,12 @@ public SettingsDialog() throws FileNotFoundException{
 		 storeServerName = serverField.getText().trim();
 		 getTime = timeField.getText().trim();
 		 storeTime = Integer.parseInt(getTime); 
-			 
-		 if (verify.verify(timeField)){
-             JOptionPane.showMessageDialog(null, "True Value");
-         }
-         else JOptionPane.showMessageDialog(null, "False Value");
-     
-		
-	
+		 ValidationCheck verify = new ValidationCheck();
+		 verify.verify(timeField);
+         
+ 
+
+
 		 //store properties here
 		 
 			try {

@@ -81,6 +81,7 @@ public class AddIcon implements ActionListener {
 		}
 		if(cmd.equals("SETTINGS"))
 			try {
+			//	SettingsDialog.dispose;
 				new SettingsDialog();
 			} catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block
