@@ -55,19 +55,19 @@ public static void getProps() throws FileNotFoundException{
 
 
 
-
+// check whether there is a property file or not.  If there is, it'll access the config file and run the Icon class, if not it'l create a settings dialog
 	public static void propsExist() throws FileNotFoundException{
 		
 		
 		File propertiesFile = new File("config.properties");
 		if(propertiesFile.exists()){
 			
-			new AddIcon();
+			new Icon();
 
 		}else{
 			  System.out.println("File not found!");
 			  new SettingsDialog();
-			 // getProps();
+			  
 
 		  }
 

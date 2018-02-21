@@ -1,4 +1,6 @@
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Properties;
 
@@ -8,10 +10,15 @@ import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import com.sun.mail.imap.IMAPMessage;
 
-public class checkingMail {
+public class Mail {
 
 	static Session session;
 	static Store store;
@@ -31,20 +38,12 @@ public class checkingMail {
 		store = session.getStore(protocolProvider);
 		store.connect(host, user, pass);
 		
-		System.out.println("Number of folder" + store.getPersonalNamespaces().length);
-		
 		inboxFolder = store.getFolder("INBOX");
 		inboxFolder.open(Folder.READ_WRITE);
 		
 		processFolder(inboxFolder);
 		messageList = inboxFolder.getMessages();
-		   System.out.println("messages.length---" + messageList.length);
-
-		      for (Message message: messageList) {
-		        processFolder(inboxFolder);
-		      }
-
-		      //close the store and folder objects
+	
 		      inboxFolder.close(false);
 		      store.close();
 
@@ -66,18 +65,13 @@ public class checkingMail {
 	static void processFolder(Folder mailboxFolder) throws MessagingException{
 	
 	if(mailboxFolder.hasNewMessages())
-		System.out.println("New Messages!");
-	else System.out.println("No New Messages!");
-	
-	System.out.println("Number of Messages:" + mailboxFolder.getMessageCount()+"\n");
-	System.out.println("Number of new Messages: " + mailboxFolder.getNewMessageCount()+"\n");
-	System.out.println("Number of unread messages: "+ mailboxFolder.getUnreadMessageCount()+"\n");
-	
+
 	messageCount = mailboxFolder.getMessageCount();
 	newMessageCount = mailboxFolder.getNewMessageCount();
 	
-	System.out.println("===============================================================================\n");
+	//System.out.println("===============================================================================\n");
 	}
+	
 	
 
 }

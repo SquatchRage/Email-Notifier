@@ -1,11 +1,18 @@
 
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
-public class AddIcon implements ActionListener {
+public class Icon implements ActionListener {
 
 
 	Timer timer;
@@ -13,7 +20,7 @@ public class AddIcon implements ActionListener {
 	SystemTray tray;
 	PopupMenu popupMenu;
 	
-	public AddIcon(){
+	public Icon(){
 		
 		MenuItem menuItem;
 		
@@ -28,9 +35,9 @@ public class AddIcon implements ActionListener {
 		menuItem.setActionCommand("SETTINGS");
 		popupMenu.add(menuItem);
 		
-		menuItem = new MenuItem("Sound Toggle");
+		menuItem = new MenuItem("Sound on");
 		menuItem.addActionListener(this);
-		menuItem.setActionCommand("SOUND TOGGLE");
+		menuItem.setActionCommand("SOUND ON");
 		popupMenu.add(menuItem);
 		
 		if(SystemTray.isSupported()){
@@ -51,10 +58,12 @@ public class AddIcon implements ActionListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		int k = Integer.parseInt(Props.time);
-		k *= 1000;
-		System.out.println(k + " I am the variable k \n\n");
-		timer = new Timer(k, this);
+		
+		// Getting time from props an storing into an integer and creating timer for it. 
+		int timeStore = Integer.parseInt(Props.time);
+		timeStore *= 1000;
+		System.out.println(timeStore + " millis between mail checks \n\n");
+		timer = new Timer(timeStore, this);
 		timer.setActionCommand("CHECK MAIL");
 		timer.setRepeats(true);
 		timer.start();
@@ -73,22 +82,30 @@ public class AddIcon implements ActionListener {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			 checkingMail.check(Props.server, SettingsDialog.protocolProvider, Props.user, Props.pass);
+			
+			 Mail.check(Props.server, SettingsDialog.protocolProvider, Props.user, Props.pass);
 		
-			if(checkingMail.newMessageCount >= 1)
-		
-			JOptionPane.showMessageDialog(null, "New Mail!"); 
+			 // checks mail count; if new mail play sound
+			if(Mail.newMessageCount >= 1)
+					JOptionPane.showMessageDialog(null, "New Mail!"); 
+				//	Sound.playSound();  THIS PLAYS SOUND, BUT PLAYS IT AT EVERY SINGLE MAIL CHECK, EVEN THOUGH ITS IN A IF STATEMENT TO CHECK FOR NEW MAIL...
 		}
+		
 		if(cmd.equals("SETTINGS"))
 			try {
-			//	SettingsDialog.dispose;
+				Props.getProps();
+		
 				new SettingsDialog();
+
+				timer.stop();
+				
+			
 			} catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		
-		if(cmd.equals("SOUND TOGGLE"))
+		if(cmd.equals("SOUND ON"))
 			JOptionPane.showMessageDialog(null, "Showing last message"); // SO MAKE A YES NO DIALOG HERE THAT WILL ENABLE SOUND
 		
 		else if (cmd.equals("KILL SQUATCH")){
@@ -96,8 +113,4 @@ public class AddIcon implements ActionListener {
 			System.exit(0);
 		}
 	}
-	
-	
-	
-	
 }

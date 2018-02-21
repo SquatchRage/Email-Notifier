@@ -2,6 +2,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.InputVerifier;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
@@ -10,37 +11,51 @@ import javax.swing.text.JTextComponent;
 
 public class ValidationCheck extends InputVerifier {
 
-	   public boolean verify(JComponent input) {
-	        String name = input.getName();
+	public boolean verify( JComponent input) { 
+        String                str; 
 
-	        if(name.equals("timeField"))
-	        {
-	            String text = ((JTextField) input).getText().trim();
-	           
-	            if (text.equals("")){
-	                JOptionPane.showMessageDialog(null, "True Value11");
-
-	            	
-	            	return false;
-	            }
-	            if (text.matches("[A-z]")){
-	            	
-	                JOptionPane.showMessageDialog(null, "True Value2");
-
-	            	
-	            	return false;
-	            }
-	            
-	            if (!text.matches("2[0-9]|[1-9][0-9]|[1-9][0-9][0-9]|1[1-9][0-9][0-9]|2[1-9][0-9][0-9]|3[1-5][0-9][0-9]")){
-	            	
-	                JOptionPane.showMessageDialog(null, "Keep number in the 20-3600 range");
-
-	            	
-	            	return true;
-	            }
-	        }
-	       
-	      
-	        return true;
-	    }
-}
+        int                    store; 
+        boolean             	type; 
+        JTextField            textField; 
+         
+        textField = (JTextField) input; 
+        str = textField.getText().trim(); 
+         
+                 
+        try 
+        { 
+ 
+        	store = Integer.parseInt(str); 
+             
+            if(store < 20 || store > 3600) 
+            { 
+                 
+            	type = false; 
+                 
+            } 
+ 
+            else  { 
+                 
+            	type = true; 
+                  } 
+             
+        } 
+             
+        catch(NumberFormatException e)  { 
+         	type = false; 
+                    } 
+             
+         
+        if(type == false){ 
+     
+            JOptionPane.showMessageDialog(null, "Integer values between 20-3600 only!"); 
+         
+        } 
+         
+         
+        return type; 
+         
+    	}
+	
+	
+    }

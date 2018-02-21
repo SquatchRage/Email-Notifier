@@ -4,17 +4,9 @@ Jonathan Rogers*/
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.print.PageFormat;
-import java.awt.print.Printable;
-import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
-import java.io.File;
-import java.io.FileInputStream;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,13 +14,14 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Properties;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.undo.UndoManager;
 
-public class SettingsDialog extends JDialog implements ActionListener 
+
+public class SettingsDialog extends JDialog implements ActionListener, DocumentListener 
 {
 
 	private static final long serialVersionUID = 8417262671424751407L;
@@ -45,6 +38,7 @@ public class SettingsDialog extends JDialog implements ActionListener
  
 	JButton saveButton;
 	JButton cancelButton;
+	JButton button;
 	
 	static String storePassword;
 	static String storeUserName;
@@ -59,20 +53,20 @@ public class SettingsDialog extends JDialog implements ActionListener
 	Props p = new Props();
 	static String protocolProvider = "imaps";
 	Timer timer;
+	int count = 0;
 	Container cp;
+	
 
  
 public SettingsDialog() throws FileNotFoundException{
-	// This line code checks whether there is already a properties file, if there is, it does not display one, if it there isnt, it display dialog. 
-	  //Props.propsExist();
-	
-	  
-	  
+
 	 //creation of buttons, labels, textfields, lists and panels. 
-	  saveButton = new JButton("Login");
+	  saveButton = new JButton("Save");
 	  saveButton.addActionListener(this);
-	  saveButton.setActionCommand("Login");
+	  saveButton.setActionCommand("Save");
 	  saveButton.isDefaultButton();
+	  saveButton.setEnabled(false);
+	  
 	 
 	 cancelButton = new JButton("Cancel");
 	 cancelButton.addActionListener(this);
@@ -84,21 +78,23 @@ public SettingsDialog() throws FileNotFoundException{
 	 timeLabel = new JLabel("Time between checks:");
 	 playSoundLabel = new JLabel("Sound?");
 
+	 passwordField = new JTextField(20);
+	 nameField = new JTextField(20);
 	 serverField = new JTextField(20);
-	 serverField.setText(storeServerName); 
 	 
-     nameField = new JTextField(20);
-     nameField.setText(storeUserName);
+	 serverField.setText(Props.server); 
+     nameField.setText(Props.user);
+     passwordField.setText(Props.pass);
      
-     passwordField = new JTextField(20);
-     passwordField.setText(storePassword);
-     
+     System.out.println(Props.pass);
+
      timeField = new JTextField(5);
      timeField.setName("timeField");
      timeField.setInputVerifier(new ValidationCheck());
-     
+
      storeSound = new JCheckBox();
 
+     //puts focus in serverField
      addWindowListener( new WindowAdapter() {
     	    public void windowOpened( WindowEvent e ){
     	        serverField.requestFocus();
@@ -171,27 +167,60 @@ public SettingsDialog() throws FileNotFoundException{
 	 
 
 		setSize(500, 300);
+		setTitle("Mail Notifier");
+		setLocationRelativeTo(null);
 		setVisible(true);
+		
+		
+//----------------- Document listener that disables Save Button if textfields empty ------------------		
+		serverField.getDocument().addDocumentListener(new DocumentListener(){
+			  public void changedUpdate(DocumentEvent e){checkLength();}
+			  public void removeUpdate(DocumentEvent e){checkLength();}
+			  public void insertUpdate(DocumentEvent e){checkLength();}
+			});
+		
+		nameField.getDocument().addDocumentListener(new DocumentListener(){
+			  public void changedUpdate(DocumentEvent e){checkLength();}
+			  public void removeUpdate(DocumentEvent e){checkLength();}
+			  public void insertUpdate(DocumentEvent e){checkLength();}
+			});
+		
+		passwordField.getDocument().addDocumentListener(new DocumentListener(){
+			  public void changedUpdate(DocumentEvent e){checkLength();}
+			  public void removeUpdate(DocumentEvent e){checkLength();}
+			  public void insertUpdate(DocumentEvent e){checkLength();}
+			});
+		
+		timeField.getDocument().addDocumentListener(new DocumentListener(){
+			  public void changedUpdate(DocumentEvent e){checkLength();}
+			  public void removeUpdate(DocumentEvent e){checkLength();}
+			  public void insertUpdate(DocumentEvent e){checkLength();}
+			});
 
  }
- 
+
+
+public void checkLength(){
+	  saveButton.setEnabled(serverField.getDocument().getLength() > 0);
+	  saveButton.setEnabled(nameField.getDocument().getLength() > 0);
+	  saveButton.setEnabled(passwordField.getDocument().getLength() > 0);
+	  saveButton.setEnabled(timeField.getDocument().getLength() > 0);
+
+
+	}
+
+//----------------------------------------------------------------------------------------------------------------
  @Override
  public void actionPerformed(ActionEvent AE) 
  {     
 	 
-	 if(AE.getActionCommand().equals("Login")){
-		 
+	 if(AE.getActionCommand().equals("Save")){
 		 
 	     storePassword = passwordField.getText().trim();
 	     storeUserName = nameField.getText().trim();
 		 storeServerName = serverField.getText().trim();
 		 getTime = timeField.getText().trim();
 		 storeTime = Integer.parseInt(getTime); 
-		 ValidationCheck verify = new ValidationCheck();
-		 verify.verify(timeField);
-         
- 
-
 
 		 //store properties here
 		 
@@ -202,9 +231,13 @@ public SettingsDialog() throws FileNotFoundException{
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			 checkingMail.check(storeServerName, protocolProvider, storeUserName, storePassword);
-			 JOptionPane.showMessageDialog(null, "You Have " +  checkingMail.newMessageCount + " New Messages! ");
-			 new AddIcon();
+			
+			// Does initial mail check, then calls the Icon class, where a timer re-checks mail at given time. 
+			 Mail.check(storeServerName, protocolProvider, storeUserName, storePassword);
+			 JOptionPane.showMessageDialog(null, "You Have " +  Mail.newMessageCount + " New Messages! ");
+			 new Icon();
+		 
+		 
 //------------------------------------------------------------------------------------------------------------------------------------			 
 			 // This code hides the settings dialog 1 second after all mail has been read and user clicks on optionPane
 			 Timer timer = new Timer(1000, new ActionListener() { 
@@ -216,7 +249,7 @@ public SettingsDialog() throws FileNotFoundException{
 		        timer.start();
 		        setVisible(true);
 //------------------------------------------------------------------------------------------------------------------------------------			 
-	 
+	 count++;
 	 }
 	 
 	 if(AE.getActionCommand().equals("Cancel")){
@@ -225,5 +258,31 @@ public SettingsDialog() throws FileNotFoundException{
 	 }
 	 
 	 
- 	}
+ 	}// End of Action
+
+
+@Override
+public void changedUpdate(DocumentEvent e) {
+	// TODO Auto-generated method stub
+	
+}
+
+
+@Override
+public void insertUpdate(DocumentEvent e) {
+	// TODO Auto-generated method stub
+	
+}
+
+
+@Override
+public void removeUpdate(DocumentEvent e) {
+	// TODO Auto-generated method stub
+	
+}
+
+ public  void close(){
+	 
+ }
+
 }// EOC
